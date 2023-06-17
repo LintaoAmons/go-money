@@ -4,6 +4,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/shopspring/decimal"
 )
 
 // Formatter stores Money formatting information.
@@ -27,9 +29,11 @@ func NewFormatter(fraction int, decimal, thousand, grapheme, template string) *F
 }
 
 // Format returns string of formatted integer using given currency template.
-func (f *Formatter) Format(amount int64) string {
+func (f *Formatter) Format(amount decimal.Decimal) string {
 	// Work with absolute amount value
-	sa := strconv.FormatInt(f.abs(amount), 10)
+
+	intAmount := amount.Mul(decimal.NewFromInt(int64(math.Pow10(f.Fraction)))).Abs().IntPart()
+	sa := strconv.FormatInt(intAmount, 10)
 
 	if len(sa) <= f.Fraction {
 		sa = strings.Repeat("0", f.Fraction-len(sa)+1) + sa
@@ -44,31 +48,14 @@ func (f *Formatter) Format(amount int64) string {
 	if f.Fraction > 0 {
 		sa = sa[:len(sa)-f.Fraction] + f.Decimal + sa[len(sa)-f.Fraction:]
 	}
+
 	sa = strings.Replace(f.Template, "1", sa, 1)
 	sa = strings.Replace(sa, "$", f.Grapheme, 1)
 
 	// Add minus sign for negative amount.
-	if amount < 0 {
+	if amount.LessThan(decimal.Zero) {
 		sa = "-" + sa
 	}
 
 	return sa
-}
-
-// ToMajorUnits returns float64 representing the value in sub units using the currency data
-func (f *Formatter) ToMajorUnits(amount int64) float64 {
-	if f.Fraction == 0 {
-		return float64(amount)
-	}
-
-	return float64(amount) / float64(math.Pow10(f.Fraction))
-}
-
-// abs return absolute value of given integer.
-func (f Formatter) abs(amount int64) int64 {
-	if amount < 0 {
-		return -amount
-	}
-
-	return amount
 }

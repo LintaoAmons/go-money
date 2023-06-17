@@ -5,6 +5,7 @@ import (
 )
 
 // Currency represents money currency information required for formatting.
+// Only for currency info and display propose
 type Currency struct {
 	Code        string
 	NumericCode string
