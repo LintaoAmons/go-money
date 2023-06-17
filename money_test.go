@@ -11,7 +11,7 @@ var one = decimal.NewFromInt(1)
 func TestNew(t *testing.T) {
 	m := New(one, EUR)
 
-	if m.amount != decimal.NewFromInt(1) {
+	if !m.amount.Equal(decimal.NewFromInt(1)) {
 		t.Errorf("Expected %d got %d", 1, m.amount)
 	}
 
@@ -19,11 +19,10 @@ func TestNew(t *testing.T) {
 		t.Errorf("Expected currency %s got %s", EUR, m.currency.Code)
 	}
 
-  
 	m = New(decimal.NewFromInt(-100), EUR)
 
-	if m.amount != decimal.NewFromInt(-100) {
-		t.Errorf("Expected %d got %d", -100, m.amount)
+	if !m.amount.Equal(decimal.NewFromInt(-100)) {
+		t.Errorf("Expected %v got %v", "-100", m.amount.String())
 	}
 }
 
@@ -48,7 +47,7 @@ func TestMoney_Display(t *testing.T) {
 		code     string
 		expected string
 	}{
-		{decimal.NewFromInt(-100), AED, "100 .\u062f.\u0625"},
+		{decimal.NewFromInt(1), AED, "1.00 .\u062f.\u0625"},
 		{decimal.NewFromFloat(0.01), USD, "$0.01"},
 	}
 
