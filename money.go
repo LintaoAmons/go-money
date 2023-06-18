@@ -37,6 +37,14 @@ func New(amount decimal.Decimal, code string) *Money {
 	}
 }
 
+// New creates and returns new instance of Money.
+func NewFromFloat(amount float64, code string) *Money {
+	return &Money{
+		amount:   decimal.NewFromFloat(amount),
+		currency: newCurrency(code).get(),
+	}
+}
+
 func (m *Money) GetAmount() *Amount {
 	return &m.amount
 }
