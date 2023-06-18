@@ -1,6 +1,7 @@
 package money
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/shopspring/decimal"
@@ -72,4 +73,8 @@ func Test_Add(t *testing.T) {
   if !result.amount.Equal(expect) {
 			t.Errorf("Expected %s got %s", expect.String(), result.amount.String())
   }
+}
+
+func TestDecimal(t *testing.T) {
+  fmt.Println(decimal.NewFromFloat(1234.234).String())
 }

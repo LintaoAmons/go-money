@@ -37,6 +37,10 @@ func New(amount decimal.Decimal, code string) *Money {
 	}
 }
 
+func (m *Money) GetAmount() *Amount {
+	return &m.amount
+}
+
 // Currency returns the currency used by Money.
 func (m *Money) Currency() *Currency {
 	return m.currency
