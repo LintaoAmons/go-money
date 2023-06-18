@@ -60,3 +60,16 @@ func TestMoney_Display(t *testing.T) {
 		}
 	}
 }
+
+func Test_Add(t *testing.T) {
+	one := New(decimal.NewFromFloat(1.23), "CNY")
+	two := New(decimal.NewFromFloat(1.23), "CNY")
+	three := New(decimal.NewFromFloat(1.23), "CNY")
+
+  result, _ := one.Add(two, three)
+
+  expect := decimal.NewFromFloat(3.69)
+  if !result.amount.Equal(expect) {
+			t.Errorf("Expected %s got %s", expect.String(), result.amount.String())
+  }
+}

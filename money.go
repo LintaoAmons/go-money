@@ -47,3 +47,15 @@ func (m *Money) Display() string {
 	c := m.currency.get()
 	return c.Formatter().Format(m.amount)
 }
+
+func (m *Money) Add(a ...*Money) (*Money, error) {
+	currency := a[0].currency
+	result := m.amount
+	for _, v := range a {
+		if !v.currency.equals(currency) {
+			return nil, errors.New("something went wrong")
+		}
+		result = result.Add(v.amount)
+	}
+	return New(result, currency.Code), nil
+}
