@@ -71,3 +71,29 @@ func (m *Money) Add(a ...*Money) (*Money, error) {
 	}
 	return New(result, currency.Code), nil
 }
+
+func (m *Money) Convert(currencyCode string, exchangeRate *float64) *Money {
+	rate := decimal.Zero
+	if exchangeRate == nil {
+		rate = getExchangeRate(m.Currency().Code, currencyCode)
+	} else {
+		rate = decimal.NewFromFloat(*exchangeRate)
+	}
+	return New(m.amount.Mul(rate), currencyCode)
+}
+
+func getExchangeRate(currencyCode, targetCurrencyCode string) decimal.Decimal {
+	if currencyCode == "SGD" && targetCurrencyCode == "CNY" {
+		return decimal.NewFromFloat(5.1)
+	}
+
+	if currencyCode == "CNY" && targetCurrencyCode == "CNY" {
+		return decimal.NewFromFloat(1)
+	}
+
+	if currencyCode == "USD" && targetCurrencyCode == "CNY" {
+		return decimal.NewFromFloat(7.1)
+	}
+
+	return decimal.NewFromFloat(1)
+}
