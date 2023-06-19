@@ -67,14 +67,24 @@ func Test_Add(t *testing.T) {
 	two := New(decimal.NewFromFloat(1.23), "CNY")
 	three := New(decimal.NewFromFloat(1.23), "CNY")
 
-  result, _ := one.Add(two, three)
+	result, _ := one.Add(two, three)
 
-  expect := decimal.NewFromFloat(3.69)
-  if !result.amount.Equal(expect) {
-			t.Errorf("Expected %s got %s", expect.String(), result.amount.String())
-  }
+	expect := decimal.NewFromFloat(3.69)
+	if !result.amount.Equal(expect) {
+		t.Errorf("Expected %s got %s", expect.String(), result.amount.String())
+	}
 }
 
 func TestDecimal(t *testing.T) {
-  fmt.Println(decimal.NewFromFloat(1234.234).String())
+	fmt.Println(decimal.NewFromFloat(1234.234).String())
+}
+
+func Test_Convert(t *testing.T) {
+	one := New(decimal.NewFromFloat(1), "SGD")
+
+	exchangeRate := 5.3
+	result := one.Convert("CNY", &exchangeRate)
+
+	fmt.Println(result.Currency().get().Code)
+	fmt.Println(result.amount.String())
 }

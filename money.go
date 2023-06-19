@@ -73,12 +73,14 @@ func (m *Money) Add(a ...*Money) (*Money, error) {
 }
 
 func (m *Money) Convert(currencyCode string, exchangeRate *float64) *Money {
-	rate := decimal.Zero
-	if exchangeRate == nil {
-		rate = getExchangeRate(m.Currency().Code, currencyCode)
-	} else {
-		rate = decimal.NewFromFloat(*exchangeRate)
-	}
+	rate := func() decimal.Decimal {
+		if exchangeRate == nil {
+			return getExchangeRate(m.Currency().Code, currencyCode)
+		} else {
+			return decimal.NewFromFloat(*exchangeRate)
+		}
+	}()
+
 	return New(m.amount.Mul(rate), currencyCode)
 }
 
