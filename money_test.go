@@ -1,6 +1,7 @@
 package money
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -87,4 +88,26 @@ func Test_Convert(t *testing.T) {
 
 	fmt.Println(result.Currency().get().Code)
 	fmt.Println(result.amount.String())
+}
+
+func Test_MarshalJson(t *testing.T) {
+	dec := decimal.NewFromFloat(12.33).MarshalJSON
+	json.Marshal(dec)
+
+	money := NewFromFloat(12.33, "CNY")
+	result, _ := json.Marshal(money)
+	fmt.Println(string(result))
+}
+
+func Test_UnMarshalJson(t *testing.T) {
+	dec := "{\"amount\":\"12.33\",\"currency\":{\"code\":\"CNY\",\"numeric_code\":\"156\",\"fraction\":2,\"grapheme\":\"元\",\"template\":\"1 $\",\"decimal\":\".\",\"thousand\":\",\"}}"
+
+	var money Money
+	err:= json.Unmarshal([]byte(dec), &money)
+	if err != nil {
+		panic("Unmarshal error")
+
+	}
+	fmt.Println(money.amount)
+	fmt.Println(money.currency)
 }

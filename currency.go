@@ -7,13 +7,13 @@ import (
 // Currency represents money currency information required for formatting.
 // Only for currency info and display propose
 type Currency struct {
-	Code        string
-	NumericCode string
-	Fraction    int
-	Grapheme    string
-	Template    string
-	Decimal     string
-	Thousand    string
+	Code        string `json:"code,omitempty"`
+	NumericCode string `json:"numeric_code,omitempty"`
+	Fraction    int    `json:"fraction,omitempty"`
+	Grapheme    string `json:"grapheme,omitempty"`
+	Template    string `json:"template,omitempty"`
+	Decimal     string `json:"decimal,omitempty"`
+	Thousand    string `json:"thousand,omitempty"`
 }
 
 type Currencies map[string]*Currency

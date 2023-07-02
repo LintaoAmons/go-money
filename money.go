@@ -1,6 +1,7 @@
 package money
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/shopspring/decimal"
@@ -27,6 +28,34 @@ type Amount = decimal.Decimal
 type Money struct {
 	amount   Amount
 	currency *Currency
+}
+
+type moneyJSON struct {
+	Amount   Amount    `json:"amount,omitempty"`
+	Currency *Currency `json:"currency,omitempty"`
+}
+
+// MarshalJSON marshals the Money struct to JSON.
+func (m Money) MarshalJSON() ([]byte, error) {
+	data := moneyJSON{
+		Amount:   m.amount,
+		Currency: m.currency,
+	}
+	return json.Marshal(data)
+}
+
+// UnmarshalJSON unmarshals the Money struct from JSON.
+func (m *Money) UnmarshalJSON(data []byte) error {
+	var jsonData moneyJSON
+	err := json.Unmarshal(data, &jsonData)
+	if err != nil {
+		return err
+	}
+
+	m.amount = jsonData.Amount
+	m.currency = jsonData.Currency
+
+	return nil
 }
 
 // New creates and returns new instance of Money.
